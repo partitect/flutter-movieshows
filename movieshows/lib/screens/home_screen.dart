@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:movieshows/models/trending_movies.dart';
 import 'package:http/http.dart' as http;
-import 'package:movieshows/widgets/movie_shows_card.dart';
+import 'package:movieshows/widgets/movie_shows_card1.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 120),
+          //padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 120),
           height: MediaQuery.of(context).size.height,
           child: MovieShowsCard(showList: showList),
         ),

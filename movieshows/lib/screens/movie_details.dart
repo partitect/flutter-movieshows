@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:movieshows/widgets/app_loader.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final ids;
@@ -59,31 +60,75 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         imageBuilder: (context, imageProvider) => Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                  colorFilter: new ColorFilter.mode(
-                      Colors.blue.withOpacity(.1), BlendMode.color),
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(50),
-              child: Text(
-                movies.id.toString(),
-                style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.w900,
+            ShaderMask(
+              shaderCallback: (rect) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(1),
+                    Colors.black.withOpacity(0),
+                    Colors.black.withOpacity(0),
+                    Colors.black.withOpacity(.5),
+                  ],
+                ).createShader(
+                    Rect.fromLTRB(0, -140, rect.width, rect.height - 20));
+              },
+              blendMode: BlendMode.darken,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                    colorFilter: new ColorFilter.mode(
+                        Colors.blue.withOpacity(.1), BlendMode.color),
                   ),
                 ),
               ),
-            )
+            ),
+            GlassmorphicContainer(
+              width: MediaQuery.of(context).size.width - 50,
+              height: 250,
+              borderRadius: 20,
+              blur: 5,
+              margin: EdgeInsets.only(bottom: 50),
+              alignment: Alignment.bottomCenter,
+              border: 0,
+              linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFFffffff).withOpacity(0.1),
+                    Color(0xFFFFFFFF).withOpacity(0.05),
+                  ],
+                  stops: [
+                    0.1,
+                    1,
+                  ]),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFffffff).withOpacity(0.5),
+                  Color((0xFFFFFFFF)).withOpacity(0.5),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  movies.title.toString(),
+                  style: GoogleFonts.quicksand(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
           ],
         ),
         placeholder: (context, url) => AppLoader(

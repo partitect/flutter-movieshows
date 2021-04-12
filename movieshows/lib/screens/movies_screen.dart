@@ -1,9 +1,5 @@
 import 'dart:convert';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:movieshows/models/trending_movies.dart';
 import 'package:http/http.dart' as http;
 import 'package:movieshows/widgets/movie_shows_card.dart';

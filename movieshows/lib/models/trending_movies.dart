@@ -23,7 +23,6 @@ class AllTrending {
     this.title,
     this.posterPath,
     this.voteAverage,
-    this.popularity,
     this.mediaType,
   });
 
@@ -40,7 +39,6 @@ class AllTrending {
   String title;
   String posterPath;
   double voteAverage;
-  double popularity;
   String mediaType;
 
   factory AllTrending.fromJson(Map<String, dynamic> json) => AllTrending(
@@ -55,7 +53,6 @@ class AllTrending {
         title: json["title"],
         posterPath: json["poster_path"],
         voteAverage: json["vote_average"].toDouble(),
-        popularity: json["popularity"].toDouble(),
         mediaType: json["media_type"],
       );
 
@@ -74,7 +71,6 @@ class AllTrending {
         "title": title,
         "poster_path": posterPath,
         "vote_average": voteAverage,
-        "popularity": popularity,
         "media_type": mediaType,
       };
 }
