@@ -3,12 +3,12 @@ import 'package:movieshows/models/trending_movies.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 class MovieShowsCard extends StatefulWidget {
-  const MovieShowsCard({
+  MovieShowsCard({
     Key key,
     @required this.showList,
   }) : super(key: key);
 
-  final List<AllTrending> showList;
+  List<AllTrending> showList;
   @override
   _MovieShowsCardState createState() => _MovieShowsCardState();
 }
