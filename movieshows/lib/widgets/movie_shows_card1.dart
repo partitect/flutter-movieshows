@@ -1,8 +1,13 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:movieshows/models/trending_movies.dart';
 import 'package:palette_generator/palette_generator.dart';
+
+import 'app_loader.dart';
 
 class MovieShowsCard extends StatefulWidget {
   const MovieShowsCard({
@@ -19,119 +24,117 @@ class MovieShowsCard extends StatefulWidget {
 
 class _MovieShowsCardState extends State<MovieShowsCard> {
   List<PaletteColor> bgColors;
-  int _currentIndex;
+  int _currentIndex = 1;
   var list = [];
   var isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = 0;
-    fetchUserOrder();
+    //_updatePaletteGenerator(0);
   }
 
-  Future<void> fetchUserOrder() async {
-    Future.delayed(Duration(milliseconds: 700), () async {
-      bgColors = [];
-
-      for (String image in widget.images) {
-        print(image);
-        PaletteGenerator palette = await PaletteGenerator.fromImageProvider(
-            NetworkImage(image),
-            size: Size(200, 100));
-        palette.darkMutedColor != null
-            ? bgColors.add(palette.darkMutedColor)
-            : bgColors.add(PaletteColor(Colors.red, 3));
-      }
-      setState(() {
-        isLoading = false;
-      });
+  var snapshot;
+  Future<void> _updatePaletteGenerator(int index) async {
+    var imgpath = widget.images[index];
+    var paletteGenerator = await PaletteGenerator.fromImageProvider(
+      Image.network(imgpath).image,
+    );
+    setState(() {
+      snapshot = paletteGenerator.dominantColor.color;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    //print(widget.images);
-    return isLoading == false
-        ? Container(
-            color: Colors.red,
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  height: 500,
-                  color: bgColors.length > 0
-                      ? bgColors[_currentIndex].color
-                      : Colors.white,
-                  child: PageView(
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                    children: widget.showList
-                        .map((image) => Container(
-                              padding: const EdgeInsets.all(16.0),
-                              margin: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 7,
-                                    offset: Offset(
-                                        0, 3), // changes position of shadow
-                                  ),
-                                ],
-                                borderRadius: BorderRadius.circular(30.0),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/original${image.posterPath}"),
-                                    fit: BoxFit.cover),
-                              ),
-                            ))
-                        .toList(),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(32.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: bgColors.length > 0
-                            ? bgColors[_currentIndex].color
-                            : Colors.white),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Nepal, The 8th Wonder",
-                          style: TextStyle(
-                              color: bgColors.isNotEmpty
-                                  ? bgColors[_currentIndex].titleTextColor
-                                  : Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30.0),
+    return Container(
+      color: snapshot,
+      child: CarouselSlider(
+        options: CarouselOptions(
+            height: 600.0,
+            onPageChanged: (index, reason) {
+              _updatePaletteGenerator(index);
+              setState(() {
+                _currentIndex = index;
+              });
+            }),
+        items: widget.showList.map((item) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Container(
+                margin: EdgeInsets.all(5),
+                child: Stack(
+                  alignment: Alignment.bottomLeft,
+                  children: [
+                    Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(30),
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(5),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(30),
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(5),
                         ),
-                        const SizedBox(height: 10.0),
-                        Text(
-                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Id obcaecati tenetur enim et dolore aut dolorum! Fugiat omnis amet atque quos sapiente similique, tempore, vitae eos perferendis cupiditate libero odit.",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                                color: bgColors.isNotEmpty
-                                    ? bgColors[_currentIndex].bodyTextColor
-                                    : Colors.black,
-                                fontSize: 20.0))
-                      ],
+                        child: CachedNetworkImage(
+                          imageUrl: item.posterPath != null
+                              ? "https://image.tmdb.org/t/p/original${item.posterPath}"
+                              : "https://logowik.com/content/uploads/images/flutter5786.jpg",
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                                colorFilter: new ColorFilter.mode(
+                                    Colors.black.withOpacity(.3),
+                                    BlendMode.hue),
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => AppLoader(
+                            wdth: 100.0,
+                            hght: 100.0,
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          )
-        : Text("Yükleniyor");
+                    Positioned(
+                        right: 0.0,
+                        top: 0.0,
+                        child: ClipOval(
+                          child: Container(
+                            width: 30.0,
+                            height: 30.0,
+                            decoration: BoxDecoration(color: Colors.red),
+                            child: Center(
+                                child: Text(
+                              item.voteAverage != null
+                                  ? item.voteAverage.toString()
+                                  : "0.0",
+                              style: GoogleFonts.quicksand(
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            )),
+                          ),
+                        )),
+                  ],
+                ),
+              );
+            },
+          );
+        }).toList(),
+      ),
+    );
   }
 }
