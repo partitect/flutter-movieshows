@@ -40,15 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          //padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 120),
-          height: MediaQuery.of(context).size.height,
-          child: MovieShowsCard(
-            showList: showList,
-            images: images,
-          ),
+      body: Container(
+        width: double.infinity,
+        //padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 120),
+        height: MediaQuery.of(context).size.height,
+        child: MovieShowsCard(
+          showList: showList,
+          images: images,
         ),
       ),
     );

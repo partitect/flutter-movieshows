@@ -34,6 +34,7 @@ dependencies:
   palette_generator:
   color_thief_flutter:
   cache_image:
+  carousel_slider:
 
 dev_dependencies:
   flutter_test:
