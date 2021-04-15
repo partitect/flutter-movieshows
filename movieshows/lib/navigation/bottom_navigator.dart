@@ -20,6 +20,7 @@ class _CurvedBottomBarState extends State<CurvedBottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 1,
         centerTitle: false,
         titleSpacing: 0.0,
         title: Transform(
@@ -39,14 +40,15 @@ class _CurvedBottomBarState extends State<CurvedBottomBar> {
             ),
           ),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor:
+            Colors.blueAccent.withOpacity(selectedIdx == 0 ? 0 : 1),
         shadowColor: Colors.black54,
         brightness: Brightness.dark,
       ),
       extendBody: true,
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
-        height: 60.0,
+        height: 65.0,
         items: <Widget>[
           SvgPicture.asset(
             'assets/svg/all.svg',

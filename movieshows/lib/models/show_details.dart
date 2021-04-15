@@ -74,7 +74,7 @@ class ShowDetailsModel {
   String status;
   String tagline;
   String type;
-  int voteAverage;
+  double voteAverage;
   int voteCount;
 
   factory ShowDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -207,7 +207,7 @@ class LastEpisodeToAir {
   String productionCode;
   int seasonNumber;
   dynamic stillPath;
-  int voteAverage;
+  double voteAverage;
   int voteCount;
 
   factory LastEpisodeToAir.fromJson(Map<String, dynamic> json) =>

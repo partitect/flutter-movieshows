@@ -120,8 +120,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
-  firebase_core: ce5006bb48508ee4e71e0f429a3f519bb8ee2961
-  firebase_storage: 2543f377090a6e219caab9224dead5bbcb30ef33
+  firebase_core: 335c02abd48672b7c83c683df833d0488a72e73e
+  firebase_storage: 22966fce4aa6e8848cbaa017df62107cee29f327
   FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
   FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1

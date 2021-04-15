@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AppLoader extends StatelessWidget {
+  
   final wdth;
   final hght;
   const AppLoader({

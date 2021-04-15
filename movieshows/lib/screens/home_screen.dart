@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:movieshows/models/trending_movies.dart';
 import 'package:http/http.dart' as http;
-import 'package:movieshows/widgets/movie_shows_card1.dart';
+import 'package:movieshows/widgets/movie_shows_card.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> images = [];
   getData() async {
     var url = Uri.parse(
-        "https://api.themoviedb.org/3/trending/all/week?api_key=79f9638dc1bcf9a4e5a09db68640db20&language=tr");
+        "https://api.themoviedb.org/3/trending/all/day?api_key=79f9638dc1bcf9a4e5a09db68640db20&language=tr");
     var response = await http.get(url);
     var decodedShows;
     if (response.statusCode == 200) {

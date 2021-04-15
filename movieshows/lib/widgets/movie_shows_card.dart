@@ -1,123 +1,145 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:movieshows/models/trending_movies.dart';
-import 'package:movieshows/screens/movie_details.dart';
-import 'package:movieshows/screens/show_details.dart';
-import 'package:movieshows/widgets/app_loader.dart';
+import 'dart:ui';
 
-class MovieShowsCard extends StatelessWidget {
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:movieshows/models/trending_movies.dart';
+import 'package:movieshows/screens/movie_details_screen.dart';
+import 'package:movieshows/screens/show_details_screen.dart';
+import 'package:palette_generator/palette_generator.dart';
+
+import 'app_loader.dart';
+
+class MovieShowsCard extends StatefulWidget {
   const MovieShowsCard({
     Key key,
     @required this.showList,
+    @required this.images,
   }) : super(key: key);
 
   final List<AllTrending> showList;
+  final List<String> images;
+  @override
+  _MovieShowsCardState createState() => _MovieShowsCardState();
+}
+
+class _MovieShowsCardState extends State<MovieShowsCard> {
+  List<PaletteColor> bgColors;
+  int _currentIndex = 0;
+  var list = [];
+  var isLoading = true;
+
+  @override
+  void initState() {
+    isLoading = false;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StaggeredGridView.countBuilder(
-      crossAxisCount: 4,
-      itemCount: showList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return InkWell(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return showList[index].mediaType == "tv"
-                    ? ShowDetailsScreen(ids: showList[index].id)
-                    : MovieDetailsScreen(ids: showList[index].id);
-              },
-            ));
-          },
-          child: Stack(
-            alignment: Alignment.bottomLeft,
+    return widget.showList.isNotEmpty
+        ? Stack(
             children: [
-              Material(
-                elevation: 2,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(5),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(5),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: showList[index].posterPath != null
-                        ? "https://image.tmdb.org/t/p/original${showList[index].posterPath}"
-                        : "https://logowik.com/content/uploads/images/flutter5786.jpg",
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                          colorFilter: new ColorFilter.mode(
-                              Colors.black.withOpacity(.3), BlendMode.hue),
-                        ),
-                      ),
-                    ),
-                    placeholder: (context, url) => AppLoader(
-                      wdth: 100.0,
-                      hght: 100.0,
-                    ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
-                ),
-              ),
-              /*  Container(
-                padding: EdgeInsets.only(left: 10, bottom: 10),
-                child: Text(
-                  showList[index].mediaType == "tv"
-                      ? showList[index].name ?? "NoName"
-                      : showList[index].title ?? "NoName",
-                  style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
+              CachedNetworkImage(
+                imageUrl:
+                    "https://image.tmdb.org/t/p/original${widget.showList[_currentIndex].posterPath}",
+                imageBuilder: (context, imageProvider) => AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-              ), */
-              Positioned(
-                  right: 0.0,
-                  top: 0.0,
-                  child: ClipOval(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 50.0),
                     child: Container(
-                      width: 30.0,
-                      height: 30.0,
-                      decoration: BoxDecoration(color: Colors.red),
-                      child: Center(
-                          child: Text(
-                        showList[index].voteAverage != null
-                            ? showList[index].voteAverage.toString()
-                            : "0.0",
-                        style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      )),
+                      decoration:
+                          BoxDecoration(color: Colors.white.withOpacity(0.0)),
                     ),
-                  )),
+                  ),
+                ),
+                placeholder: (context, url) => AppLoader(
+                  wdth: 100.0,
+                  hght: 100.0,
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                      height: 500.0,
+                      enlargeCenterPage: true,
+                      onPageChanged: (index, reason) {
+                        //_updatePaletteGenerator(index);
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      }),
+                  items: widget.showList.map((item) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return item.mediaType == "tv"
+                                    ? ShowDetails(ids: item.id)
+                                    : MovieDetails(ids: item.id);
+                              },
+                            ));
+                          },
+                          child: Container(
+                            child: Stack(
+                              alignment: Alignment.bottomLeft,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(30),
+                                    bottomLeft: Radius.circular(30),
+                                    bottomRight: Radius.circular(5),
+                                  ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.posterPath != null
+                                        ? "https://image.tmdb.org/t/p/original${item.posterPath}"
+                                        : "https://logowik.com/content/uploads/images/flutter5786.jpg",
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                          colorFilter: ColorFilter.mode(
+                                              Colors.black.withOpacity(.3),
+                                              BlendMode.hue),
+                                        ),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => AppLoader(
+                                      wdth: 100.0,
+                                      hght: 100.0,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+              )
             ],
-          ),
-        );
-      },
-      staggeredTileBuilder: (int index) {
-        return StaggeredTile.count(index == 0 ? 4 : 2, index == 0 ? 2.5 : 3);
-      },
-      mainAxisSpacing: 10.0,
-      crossAxisSpacing: 10.0,
-    );
+          )
+        : AppLoader(
+            wdth: 100.0,
+            hght: 100.0,
+          );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:movieshows/models/trending_movies.dart';
 import 'package:http/http.dart' as http;
-import 'package:movieshows/widgets/movie_shows_card.dart';
+import 'package:movieshows/widgets/movies_grid_card.dart';
 
 class MoviesScreen extends StatefulWidget {
   @override
@@ -43,7 +43,7 @@ class _MoviesScreenState extends State<MoviesScreen> {
             width: double.infinity,
             padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 120),
             height: MediaQuery.of(context).size.height,
-            child: MovieShowsCard(showList: showList)),
+            child: MoviesGridCard(showList: showList)),
       ),
     );
   }
