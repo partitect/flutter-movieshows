@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:movieshows/models/trending_movies.dart';
 import 'package:movieshows/screens/movie_details_screen.dart';
 import 'package:movieshows/screens/show_details_screen.dart';
+import 'package:movieshows/widgets/lottie_loader.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import 'app_loader.dart';
@@ -138,10 +139,7 @@ class _MovieShowsCardState extends State<MovieShowsCard> {
                                 ),
                               ),
                             ),
-                            placeholder: (context, url) => AppLoader(
-                              wdth: 100.0,
-                              hght: 100.0,
-                            ),
+                            placeholder: (context, url) => LottieLoader(),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
                           ),

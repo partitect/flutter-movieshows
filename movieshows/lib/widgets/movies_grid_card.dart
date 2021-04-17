@@ -6,6 +6,7 @@ import 'package:movieshows/models/trending_movies.dart';
 import 'package:movieshows/screens/movie_details_screen.dart';
 import 'package:movieshows/screens/show_details_screen.dart';
 import 'package:movieshows/widgets/app_loader.dart';
+import 'package:movieshows/widgets/lottie_loader.dart';
 
 class MoviesGridCard extends StatelessWidget {
   const MoviesGridCard({
@@ -63,10 +64,7 @@ class MoviesGridCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    placeholder: (context, url) => AppLoader(
-                      wdth: 100.0,
-                      hght: 100.0,
-                    ),
+                    placeholder: (context, url) => LottieLoader(),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),

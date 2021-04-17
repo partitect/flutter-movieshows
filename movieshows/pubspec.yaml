@@ -35,6 +35,7 @@ dependencies:
   color_thief_flutter:
   cache_image:
   carousel_slider:
+  lottie:
 
 dev_dependencies:
   flutter_test:
@@ -49,3 +50,4 @@ flutter:
   assets:
     - assets/svg/
     - assets/img/
+    - assets/lottie/
